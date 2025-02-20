@@ -152,7 +152,7 @@ const Footer = () => {
           <ThemeToggle />
           <p className="text-muted-foreground">
             &copy; <a href="https://9d8.dev">9d8</a>. All rights reserved.
-            2025-present.
+            2025-present with Iain Swaugh.
           </p>
         </Container>
       </Section>
