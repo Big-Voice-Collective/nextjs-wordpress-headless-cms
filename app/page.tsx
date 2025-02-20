@@ -10,12 +10,27 @@ import { File, Pen, Tag, Diamond, User, Folder } from "lucide-react";
 import { WordPressIcon } from "@/components/icons/wordpress";
 import { NextJsIcon } from "@/components/icons/nextjs";
 
+// Forms
+import { ContactForm } from "@/components/forms/contact-form";
+
 // This page is using the craft.tsx component and design system
 export default function Home() {
   return (
     <Section>
       <Container>
-        <ToDelete />
+        <div className="flex flex-col items-center justify-center space-y-8 text-center py-12">
+          <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+            Welcome to Our Blog
+          </h1>
+          <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed">
+            Stay up to date with our latest news and updates. Subscribe to our newsletter.
+          </p>
+          <div className="w-full max-w-md mx-auto">
+            <ContactForm />
+          </div>
+          
+          <ToDelete />
+        </div>
       </Container>
     </Section>
   );
