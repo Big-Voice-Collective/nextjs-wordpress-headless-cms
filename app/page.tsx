@@ -42,7 +42,7 @@ const ToDelete = () => {
     <main className="space-y-6">
       <Prose>
         <h1>
-          <Balancer>Headless WordPress built with the Next.js</Balancer>
+          <Balancer>Headless WordPress built with the Next.js and Waugher</Balancer>
         </h1>
 
         <p>
