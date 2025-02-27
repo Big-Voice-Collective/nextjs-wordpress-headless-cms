@@ -18,10 +18,10 @@ export function ContactForm() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
+      const response = await fetch('/api/contact', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
@@ -61,9 +61,14 @@ export function ContactForm() {
           className="w-full"
         />
       </div>
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? "Submitting..." : "Subscribe"}
       </Button>
+      {message && (
+        <p className={`text-sm ${message.includes("wrong") ? "text-red-500" : "text-green-500"}`}>
+          {message}
+        </p>
+      )}
     </form>
   );
 } 
