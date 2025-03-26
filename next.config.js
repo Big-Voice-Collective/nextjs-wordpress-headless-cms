@@ -1,5 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+  distDir: 'builds',
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: `${process.env.WORDPRESS_HOSTNAME}`,
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/admin",
+        destination: `${process.env.WORDPRESS_URL}/wp-admin`,
+        permanent: true,
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Avoid client-side loading of problematic packages
