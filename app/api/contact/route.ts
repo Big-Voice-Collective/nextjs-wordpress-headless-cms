@@ -1,71 +1,50 @@
-import { NextResponse } from "next/server";
-import * as SibApiV3Sdk from 'sib-api-v3-sdk';
-
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-apiInstance.setApiKey(SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email } = body;
-
-    // Validate inputs
-    if (!name || !email) {
-      return NextResponse.json(
-        { message: "Name and email are required" },
-        { status: 400 }
-      );
+    
+    const apiKey = process.env.BREVO_API_KEY;
+    if (!apiKey) {
+      throw new Error('BREVO_API_KEY is not defined');
     }
 
-    // Create email to yourself (notification)
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.subject = "New Contact Form Submission";
-    sendSmtpEmail.htmlContent = `
-      <h3>New Contact Form Submission</h3>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-    `;
-    sendSmtpEmail.sender = {
-      name: process.env.YOUR_NAME,
-      email: process.env.YOUR_EMAIL_ADDRESS
-    };
-    sendSmtpEmail.to = [{
-      email: process.env.YOUR_EMAIL_ADDRESS,
-      name: process.env.YOUR_NAME
-    }];
+    // Use Brevo's REST API directly instead of the SDK
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': apiKey,
+      },
+      body: JSON.stringify({
+        sender: {
+          name: body.name,
+          email: body.email,
+        },
+        to: [{
+          email: process.env.CONTACT_EMAIL || 'your-email@example.com',
+          name: 'Recipient Name'
+        }],
+        subject: 'New Contact Form Submission',
+        htmlContent: `
+          <p>Name: ${body.name}</p>
+          <p>Email: ${body.email}</p>
+          <p>Message: ${body.message}</p>
+        `
+      }),
+    });
 
-    // Send notification email to yourself
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
+    if (!response.ok) {
+      throw new Error('Failed to send email');
+    }
 
-    // Send confirmation email to the subscriber
-    const confirmationEmail = new SibApiV3Sdk.SendSmtpEmail();
-    confirmationEmail.subject = "Thanks for subscribing!";
-    confirmationEmail.htmlContent = `
-      <h3>Thanks for subscribing!</h3>
-      <p>Hi ${name},</p>
-      <p>Thank you for subscribing to our newsletter!</p>
-      <p>Best regards,<br>${process.env.YOUR_NAME}</p>
-    `;
-    confirmationEmail.sender = {
-      name: process.env.YOUR_NAME,
-      email: process.env.YOUR_EMAIL_ADDRESS
-    };
-    confirmationEmail.to = [{
-      email: email,
-      name: name
-    }];
-
-    // Send confirmation email to subscriber
-    await apiInstance.sendTransacEmail(confirmationEmail);
-
-    return NextResponse.json(
-      { message: "Thanks for subscribing!" },
-      { status: 200 }
-    );
+    const data = await response.json();
+    return NextResponse.json({ success: true, data });
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Contact API Error:', error);
     return NextResponse.json(
-      { message: "Something went wrong" },
+      { error: 'Failed to send message' },
       { status: 500 }
     );
   }

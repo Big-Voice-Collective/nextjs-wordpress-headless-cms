@@ -5,7 +5,7 @@ export default function ServicesPage() {
       
       <div className="space-y-6 max-w-3xl">
         <p className="text-lg leading-relaxed">
-          Founded in 2020, the services Big Voice Collective emerged from a shared vision to transform the way communities engage with performing arts. Our journey began with a small group of passionate artists and educators who believed in the power of creative expression to bridge cultural divides and inspire positive change. Today, we've grown into a vibrant community hub, fostering talent and creating opportunities for artists of all backgrounds.
+          Founded in 2020, the services Big Voice Collective emerged from a shared vision to transform the way communities engage with performing arts. Our journey began with a small group of passionate artists and educators who believed in the power of creative expression to bridge cultural divides and inspire positive change. Today, we&apos;ve grown into a vibrant community hub, fostering talent and creating opportunities for artists of all backgrounds.
         </p>
 
         <p className="text-lg leading-relaxed">
